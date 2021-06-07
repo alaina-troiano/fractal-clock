@@ -13,120 +13,127 @@ canvas {
 <canvas width="600px" height="600px" id="canvas"></canvas>
 <hr>
 <p>inspired by <a href="https://www.youtube.com/watch?v=4SH_-YhN15A">a CodeParade video</a></p>
+<p>TODO</p>
+  <ul>
+    <li>vector2d class</li>
+    <li>clock class</li>
+    <li>fractal color selector</li>
+    <li>canvas size selector</li>
+  </ul>
 
 
 <script>
-// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
-// Improvements: serve it up, colors, fix logic to make it more like the video, improve performance, make it a timer
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+  // Improvements: serve it up, colors, fix logic to make it more like the video, improve performance, make it a timer
 
-var baseColor = "#000";
-var fractalColor = "rgba(0, 0, 160, 0.2)";
-var handLength = 100;
-var factor = 0.7;
-var minLength = 3;
-var canvasSize = 600;
+  var baseColor = "#000";
+  var fractalColor = "rgba(0, 0, 160, 0.2)";
+  var handLength = 100;
+  var factor = 0.7;
+  var minLength = 3;
+  var canvasSize = 600;
 
-function drawCircle(centerX, centerY, radius){
- var ctx = document.getElementById('canvas').getContext('2d');
- ctx.beginPath();
- ctx.arc(centerX, centerY, radius, 0, 2*Math.PI);
- ctx.stroke(); 
-}
+  function drawCircle(centerX, centerY, radius){
+   var ctx = document.getElementById('canvas').getContext('2d');
+   ctx.beginPath();
+   ctx.arc(centerX, centerY, radius, 0, 2*Math.PI);
+   ctx.stroke(); 
+  }
 
-function drawLine(startX, startY, endX, endY) {
- var ctx = document.getElementById('canvas').getContext('2d');
- ctx.beginPath();
- ctx.moveTo(startX, startY);
- ctx.lineTo(endX, endY);
- ctx.closePath();
- ctx.stroke();
-}
+  function drawLine(startX, startY, endX, endY) {
+   var ctx = document.getElementById('canvas').getContext('2d');
+   ctx.beginPath();
+   ctx.moveTo(startX, startY);
+   ctx.lineTo(endX, endY);
+   ctx.closePath();
+   ctx.stroke();
+  }
 
-function convertAngle(clockAngle) {
- return clockAngle + Math.PI / 2;
-}
+  function convertAngle(clockAngle) {
+   return clockAngle + Math.PI / 2;
+  }
 
-function drawHand(angle, length, startX, startY) {
- if (!length) {
-  length = handLength;
-  startX = canvasSize/2;
-  startY = canvasSize/2;
- }
- var endX = length*Math.sin(angle) + startX;
- var endY = length*-1*Math.cos(angle) + startY;
- drawLine(startX, startY, endX, endY);
- return [endX, endY];
-}
+  function drawHand(angle, length, startX, startY) {
+   if (!length) {
+    length = handLength;
+    startX = canvasSize/2;
+    startY = canvasSize/2;
+   }
+   var endX = length*Math.sin(angle) + startX;
+   var endY = length*-1*Math.cos(angle) + startY;
+   drawLine(startX, startY, endX, endY);
+   return [endX, endY];
+  }
 
-function drawFractal(length, minutesAngle, secondsAngle, dm, ds, startX, startY){
- while (minutesAngle > Math.PI*2) {
-  minutesAngle -= Math.PI*2;
- }
- while (secondsAngle > Math.PI*2) { 
-  secondsAngle -= Math.PI*2;
- }
- var newXYm = drawHand(minutesAngle, length, startX, startY);
- var newXYs = drawHand(secondsAngle, length, startX, startY);
- if (length < minLength) {
-  return;
- }
- var newXm = newXYm[0];
- var newYm = newXYm[1];
- var newXs = newXYs[0];
- var newYs = newXYs[1];
- drawFractal(length*factor, minutesAngle+dm, secondsAngle+dm, dm, ds, newXm, newYm);
- drawFractal(length*factor, minutesAngle+ds, secondsAngle+ds, dm, ds, newXs, newYs);
-}
+  function drawFractal(length, minutesAngle, secondsAngle, dm, ds, startX, startY){
+   while (minutesAngle > Math.PI*2) {
+    minutesAngle -= Math.PI*2;
+   }
+   while (secondsAngle > Math.PI*2) { 
+    secondsAngle -= Math.PI*2;
+   }
+   var newXYm = drawHand(minutesAngle, length, startX, startY);
+   var newXYs = drawHand(secondsAngle, length, startX, startY);
+   if (length < minLength) {
+    return;
+   }
+   var newXm = newXYm[0];
+   var newYm = newXYm[1];
+   var newXs = newXYs[0];
+   var newYs = newXYs[1];
+   drawFractal(length*factor, minutesAngle+dm, secondsAngle+dm, dm, ds, newXm, newYm);
+   drawFractal(length*factor, minutesAngle+ds, secondsAngle+ds, dm, ds, newXs, newYs);
+  }
 
-function init(){
- window.requestAnimationFrame(paint);
-}
+  function init(){
+   window.requestAnimationFrame(paint);
+  }
 
-function paint(){
- var ctx = document.getElementById('canvas').getContext('2d');
- ctx.clearRect(0, 0, canvasSize, canvasSize);
- ctx.strokeStyle = baseColor;
- ctx.font = "20px serif";
- 
- drawCircle(canvasSize/2, canvasSize/2, 125);
- // TODO draw numbers and ticks
- 
- var dt = new Date();
- var minutes = dt.getMinutes();
- var seconds = dt.getSeconds();
- ctx.fillText("" + minutes + ":" + seconds + "", 20, 20);
- var fractionalSeconds = dt.getMilliseconds() / 1000;
- seconds += fractionalSeconds;
- var fractionalMinutes = seconds / 60;
- minutes += fractionalMinutes;
- var minutesAngle = (minutes/60)*2*Math.PI;
- var secondsAngle = (seconds/60)*2*Math.PI;
+  function paint(){
+   var ctx = document.getElementById('canvas').getContext('2d');
+   ctx.clearRect(0, 0, canvasSize, canvasSize);
+   ctx.strokeStyle = baseColor;
+   ctx.font = "20px serif";
 
- //secondsAngle = Math.PI*0.1;
- drawHand(minutesAngle);
- drawHand(secondsAngle);
- ctx.strokeStyle = fractalColor;
- drawFractal(
-  handLength*factor,
-  minutesAngle+secondsAngle,
-  secondsAngle*2,
-  minutesAngle, secondsAngle,
-  handLength*Math.sin(minutesAngle)+canvasSize/2,
-  handLength*-1*Math.cos(minutesAngle)+canvasSize/2,
- );
- drawFractal(
-  handLength*factor, 
-  minutesAngle+secondsAngle, 
-  secondsAngle*2, 
-  minutesAngle, secondsAngle, 
-  handLength*Math.sin(secondsAngle)+canvasSize/2, 
-  handLength*-1*Math.cos(secondsAngle)+canvasSize/2,
- );
- 
- window.requestAnimationFrame(paint);
-}
+   drawCircle(canvasSize/2, canvasSize/2, 125);
+   // TODO draw numbers and ticks
 
-init();
+   var dt = new Date();
+   var minutes = dt.getMinutes();
+   var seconds = dt.getSeconds();
+   ctx.fillText("" + minutes + ":" + seconds + "", 20, 20);
+   var fractionalSeconds = dt.getMilliseconds() / 1000;
+   seconds += fractionalSeconds;
+   var fractionalMinutes = seconds / 60;
+   minutes += fractionalMinutes;
+   var minutesAngle = (minutes/60)*2*Math.PI;
+   var secondsAngle = (seconds/60)*2*Math.PI;
+
+   //secondsAngle = Math.PI*0.1;
+   drawHand(minutesAngle);
+   drawHand(secondsAngle);
+   ctx.strokeStyle = fractalColor;
+   drawFractal(
+    handLength*factor,
+    minutesAngle+secondsAngle,
+    secondsAngle*2,
+    minutesAngle, secondsAngle,
+    handLength*Math.sin(minutesAngle)+canvasSize/2,
+    handLength*-1*Math.cos(minutesAngle)+canvasSize/2,
+   );
+   drawFractal(
+    handLength*factor, 
+    minutesAngle+secondsAngle, 
+    secondsAngle*2, 
+    minutesAngle, secondsAngle, 
+    handLength*Math.sin(secondsAngle)+canvasSize/2, 
+    handLength*-1*Math.cos(secondsAngle)+canvasSize/2,
+   );
+
+   window.requestAnimationFrame(paint);
+  }
+
+  init();
 </script>
 </body>
 </html>
