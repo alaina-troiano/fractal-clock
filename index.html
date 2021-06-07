@@ -74,7 +74,7 @@ function drawFractal(length, minutesAngle, secondsAngle, dm, ds, startX, startY)
  var newYm = newXYm[1];
  var newXs = newXYs[0];
  var newYs = newXYs[1];
- drawFractal(length*factor, minutesAngle+ds, secondsAngle+ds, dm, ds, newXm, newYm);
+ drawFractal(length*factor, minutesAngle+dm, secondsAngle+dm, dm, ds, newXm, newYm);
  drawFractal(length*factor, minutesAngle+ds, secondsAngle+ds, dm, ds, newXs, newYs);
 }
 
