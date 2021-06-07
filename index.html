@@ -97,7 +97,8 @@ canvas {
     var dt = new Date();
     var minutes = dt.getMinutes();
     var seconds = dt.getSeconds();
-    ctx.fillText("" + minutes + ":" + seconds + "", 20, 20);
+    var paddedSeconds = ("0"+seconds).slice(-2);
+    ctx.fillText("" + minutes + ":" + paddedSeconds + "", 20, 20);
     var fractionalSeconds = dt.getMilliseconds() / 1000;
     seconds += fractionalSeconds;
     var fractionalMinutes = seconds / 60;
