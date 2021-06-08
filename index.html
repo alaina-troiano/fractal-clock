@@ -30,9 +30,9 @@ canvas {
   <p>TODO</p>
   <ul>
     <li>clock class</li>
-    <li>clock numbers and ticks</li>
-    <li>canvas size selector</li>
-    <li>suggested music</li>
+    <li>clock numbers</li>
+    <li>canvas size selector (would need to wipe everything and re-initialize)</li>
+    <li>suggested music (<a href="https://www.youtube.com/watch?v=118ZYhZUsWw">music from inspiring video</a>)</li>
     <li>make it a timer</li>
     <li>improve performance as needed</li>
   </ul>
@@ -41,7 +41,7 @@ canvas {
   <script>
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
 
-  var handLength = 100;
+  var handLength = 90;
   var factor = 0.7;
   var minLength = 3;
   var canvasSize = 600;
@@ -109,7 +109,15 @@ canvas {
       ctx.strokeStyle = "black";
     }
 
-    drawCircle(new Vector2D(canvasSize/2, canvasSize/2), 125);
+    drawCircle(new Vector2D(canvasSize/2, canvasSize/2), 120);
+    for (var i = 0; i<Math.PI*2; i+=Math.PI/6){
+      var angle = i; // conversion here if necessary
+      var start = new Vector2D(canvasSize/2, canvasSize/2);
+      drawLine(
+        new Vector2D(110*Math.sin(angle) + start.x, 110*-1*Math.cos(angle) + start.y),
+        new Vector2D(120*Math.sin(angle) + start.x, 120*-1*Math.cos(angle) + start.y),
+      );
+    }
 
     var dt = new Date();
     var minutes = dt.getMinutes();
