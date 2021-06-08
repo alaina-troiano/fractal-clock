@@ -20,6 +20,11 @@ canvas {
     <option style="color: white; background-color: rgba(0, 0, 160, 1)" value="rgba(0, 0, 160, 0.2)">Blue</option>
     <option style="color: white; background-color: rgba(100, 0, 120, 1)" value="rgba(100, 0, 120, 0.2)">Purple</option>
   </select>
+  <br>
+  Background color: <select id="backgroundColor">
+    <option style="color: black; background-color: white;" value="white">White</option>
+    <option style="color: white; background-color: black;" value="black">Black</option>
+  </select>
   <hr>
   <p>inspired by <a href="https://www.youtube.com/watch?v=4SH_-YhN15A">a CodeParade video</a></p>
   <p>TODO</p>
@@ -27,17 +32,15 @@ canvas {
     <li>clock class</li>
     <li>clock numbers and ticks</li>
     <li>canvas size selector</li>
-    <li>background color selector (black and white only, opposite-color clock)</li>
     <li>suggested music</li>
+    <li>make it a timer</li>
+    <li>improve performance as needed</li>
   </ul>
 
 
   <script>
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
-  // Improvements: serve it up, colors, fix logic to make it more like the video, improve performance, make it a timer
 
-  var baseColor = "#000";
-  var fractalColor = "rgba(0, 0, 160, 0.2)";
   var handLength = 100;
   var factor = 0.7;
   var minLength = 3;
@@ -97,8 +100,14 @@ canvas {
   function paint(){
     var ctx = document.getElementById('canvas').getContext('2d');
     ctx.clearRect(0, 0, canvasSize, canvasSize);
-    ctx.strokeStyle = baseColor;
     ctx.font = "20px serif";
+    
+    var backgroundColor = document.getElementById("backgroundColor").value;
+    if (backgroundColor === "black") {
+      ctx.strokeStyle = "white";
+    } else {
+      ctx.strokeStyle = "black";
+    }
 
     drawCircle(new Vector2D(canvasSize/2, canvasSize/2), 125);
 
@@ -140,6 +149,10 @@ canvas {
   function init(){
     window.requestAnimationFrame(paint);
   }
+  
+  document.getElementById("backgroundColor").addEventListener('change', function(){ 
+    document.getElementsByTagName("body")[0].style.background = this.value;
+  });
 
   init();
 </script>
