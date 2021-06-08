@@ -12,12 +12,20 @@ canvas {
 
   <canvas width="600px" height="600px" id="canvas"></canvas>
   <hr>
+  <h2>Settings</h2>
+  Fractal color: <select id="fractalColor">
+    <option style="color: white; background-color: rgba(160, 0, 0, 1)" value="rgba(160, 0, 0, 0.2)">Red</option>
+    <option style="color: white; background-color: rgba(220, 120, 0, 1)" value="rgba(220, 120, 0, 0.2)">Orange</option>
+    <option style="color: white; background-color: rgba(0, 120, 0, 1)" value="rgba(0, 120, 0, 0.2)">Green</option>
+    <option style="color: white; background-color: rgba(0, 0, 160, 1)" value="rgba(0, 0, 160, 0.2)">Blue</option>
+    <option style="color: white; background-color: rgba(100, 0, 120, 1)" value="rgba(100, 0, 120, 0.2)">Purple</option>
+  </select>
+  <hr>
   <p>inspired by <a href="https://www.youtube.com/watch?v=4SH_-YhN15A">a CodeParade video</a></p>
   <p>TODO</p>
   <ul>
     <li>clock class</li>
     <li>clock numbers and ticks</li>
-    <li>fractal color selector</li>
     <li>canvas size selector</li>
     <li>background color selector (black and white only, opposite-color clock)</li>
     <li>suggested music</li>
@@ -108,7 +116,7 @@ canvas {
 
     drawHand(minutesAngle);
     drawHand(secondsAngle);
-    ctx.strokeStyle = fractalColor;
+    ctx.strokeStyle = document.getElementById("fractalColor").value;
     drawFractal(
       handLength*factor,
       minutesAngle+secondsAngle,
