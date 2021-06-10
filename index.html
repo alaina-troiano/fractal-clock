@@ -3,6 +3,10 @@
 <meta charset="utf-8"/>
 <title>Fractal Clock</title>
 <style>
+#canvasWrapper {
+  width: 100%;
+  text-align: center;
+}
 canvas {
   border: 1px solid #888;
 }
@@ -10,7 +14,7 @@ canvas {
 </head>
 <body>
 
-  <canvas width="600px" height="600px" id="canvas"></canvas>
+  <div id="canvasWrapper"><canvas width="600px" height="600px" id="canvas"></canvas></div>
   <hr>
   <h2>Settings</h2>
   Fractal color: <select id="fractalColor">
@@ -47,17 +51,28 @@ canvas {
 
   <script>
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
-
-  var handLength = 90;
+  
+  // This factor was set by the original video; do not change it
   var factor = 0.7;
+  // 3 is the smallest minLength for it to not be jerky on my computers
   var minLength = 3;
-  var canvasSize = 600;
-
+  // Do something with this font later
+  var fontSize = 20;
+  // these get set in init
+  var canvasSize, handLength, circleRadius;
+  
+  // Classes
   function Vector2D(x, y){
     this.x = x;
     this.y = y;
   }
-
+  
+  // Functions
+  function getCanvasSize(){
+    // The canvas begins slightly below the top of the viewport 
+    return window.innerHeight * .98;
+  }
+  
   function drawCircle(center, radius){
     var ctx = document.getElementById('canvas').getContext('2d');
     ctx.beginPath();
@@ -117,8 +132,19 @@ canvas {
 
   function paint(){
     var ctx = document.getElementById('canvas').getContext('2d');
+    ctx.font = fontSize + "px serif";
+    //ctx.font = "20px serif";
+    
+    var newCanvasSize = getCanvasSize();
+    if (newCanvasSize != canvasSize) {
+      document.getElementById("canvas").setAttribute("width", newCanvasSize);
+      document.getElementById("canvas").setAttribute("height", newCanvasSize);
+      handLength = newCanvasSize*0.15;
+      circleRadius = newCanvasSize/5;
+    }
+    canvasSize = newCanvasSize;
+    
     ctx.clearRect(0, 0, canvasSize, canvasSize);
-    ctx.font = "20px serif";
     
     var backgroundColor = document.getElementById("backgroundColor").value;
     if (backgroundColor === "black") {
@@ -126,22 +152,25 @@ canvas {
     } else {
       ctx.strokeStyle = "black";
     }
-
-    drawCircle(new Vector2D(canvasSize/2, canvasSize/2), 120);
+    
+    var tickInnerRadius = circleRadius*0.95;
+    drawCircle(new Vector2D(canvasSize/2, canvasSize/2), circleRadius);
     for (var i = 0; i<Math.PI*2; i+=Math.PI/6){
-      var angle = i; // conversion here if necessary
+      var angle = i;
       var start = new Vector2D(canvasSize/2, canvasSize/2);
       drawLine(
-        new Vector2D(110*Math.sin(angle) + start.x, 110*-1*Math.cos(angle) + start.y),
-        new Vector2D(120*Math.sin(angle) + start.x, 120*-1*Math.cos(angle) + start.y),
+        new Vector2D(tickInnerRadius*Math.sin(angle) + start.x, tickInnerRadius*-1*Math.cos(angle) + start.y),
+        new Vector2D(circleRadius*Math.sin(angle) + start.x, circleRadius*-1*Math.cos(angle) + start.y),
       );
     }
 
     var dt = new Date();
+    var hours = dt.getHours();
     var minutes = dt.getMinutes();
+    var paddedMinutes = ("0"+minutes).slice(-2);
     var seconds = dt.getSeconds();
     var paddedSeconds = ("0"+seconds).slice(-2);
-    ctx.fillText("" + minutes + ":" + paddedSeconds + "", 20, 20);
+    ctx.fillText("" + hours + ":" + minutes + ":" + paddedSeconds + "", 20, 20);
     var fractionalSeconds = dt.getMilliseconds() / 1000;
     seconds += fractionalSeconds;
     var fractionalMinutes = seconds / 60;
@@ -169,6 +198,11 @@ canvas {
   }
 
   function init(){
+    canvasSize = getCanvasSize();
+    handLength = canvasSize*0.15;
+    circleRadius = canvasSize/5;
+    document.getElementById("canvas").setAttribute("width", canvasSize);
+    document.getElementById("canvas").setAttribute("height", canvasSize);
     window.requestAnimationFrame(paint);
   }
   
