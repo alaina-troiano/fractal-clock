@@ -18,6 +18,13 @@ canvas {
     <option style="color: white; background-color: rgba(220, 120, 0, 1)" value="rgba(220, 120, 0, 0.2)">Orange</option>
     <option style="color: white; background-color: rgba(0, 120, 0, 1)" value="rgba(0, 120, 0, 0.2)">Green</option>
     <option style="color: white; background-color: rgba(0, 0, 160, 1)" value="rgba(0, 0, 160, 0.2)">Blue</option>
+    <option selected style="color: white; background-color: rgba(100, 0, 120, 1)" value="rgba(100, 0, 120, 0.2)">Purple</option>
+  </select>
+  Second fractal color: <select id="fractalColor2">
+    <option style="color: white; background-color: rgba(160, 0, 0, 1)" value="rgba(160, 0, 0, 0.2)">Red</option>
+    <option style="color: white; background-color: rgba(220, 120, 0, 1)" value="rgba(220, 120, 0, 0.2)">Orange</option>
+    <option style="color: white; background-color: rgba(0, 120, 0, 1)" value="rgba(0, 120, 0, 0.2)">Green</option>
+    <option style="color: white; background-color: rgba(0, 0, 160, 1)" value="rgba(0, 0, 160, 0.2)">Blue</option>
     <option style="color: white; background-color: rgba(100, 0, 120, 1)" value="rgba(100, 0, 120, 0.2)">Purple</option>
   </select>
   <br>
@@ -86,6 +93,8 @@ canvas {
       } else {
         ctx.strokeStyle = "black";
       }
+    } else if (length < (handLength/15)) {
+      ctx.strokeStyle = document.getElementById("fractalColor2").value;
     } else {
       ctx.strokeStyle = document.getElementById("fractalColor").value;
     }
