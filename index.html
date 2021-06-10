@@ -42,7 +42,6 @@ canvas {
   <ul>
     <li>clock class</li>
     <li>clock numbers</li>
-    <li>canvas size selector (would need to wipe everything and re-initialize)</li>
     <li>suggested music (<a href="https://www.youtube.com/watch?v=118ZYhZUsWw">music from inspiring video</a>)</li>
     <li>make it a timer</li>
     <li>improve performance as needed</li>
@@ -54,8 +53,11 @@ canvas {
   
   // This factor was set by the original video; do not change it
   var factor = 0.7;
-  // 3 is the smallest minLength for it to not be jerky on my computers
-  var minLength = 3;
+  // 4 is the smallest minLength for it to not be jerky on my computers
+  // it was 3 and then it changed, perhaps with the dynamic canvas size
+  // also depends on the screen size though
+  // we could try canvasSize/186 (my viewport height of 745 is roughly 4*186)
+  var minLength = 4;
   // Do something with this font later
   var fontSize = 20;
   // these get set in init
@@ -69,8 +71,8 @@ canvas {
   
   // Functions
   function getCanvasSize(){
-    // The canvas begins slightly below the top of the viewport 
-    return window.innerHeight * .98;
+    // The canvas begins slightly below the top of the viewport; adjust for that and double it so it's centered
+    return window.innerHeight - 20;
   }
   
   function drawCircle(center, radius){
